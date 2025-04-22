@@ -88,9 +88,20 @@
 @media (min-width: 768px) {
     .upload-section {
         flex-direction: row;
+        padding-bottom: 100px;
     }
 
     .upload-box {
         width: 45%;
+    }
+}
+
+@media (max-width: 768px) {
+    .site-title {
+        font-size: 2rem;
+    }
+
+    .upload-section {
+        padding-bottom: 250px;
     }
 }

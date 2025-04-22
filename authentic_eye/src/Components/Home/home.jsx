@@ -3,6 +3,54 @@ import { Typewriter } from "react-simple-typewriter";
 import "./home.css";
 
 const Home = () => {
+    const handleVideoUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch("http://localhost:5000/predict/video", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(`Result: ${data.result}\nConfidence: ${(data.confidence * 100).toFixed(2)}%`);
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            alert(`Network error: ${error.message}`);
+        }
+    };
+
+    const handleImageUpload = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        try {
+            const response = await fetch("http://localhost:5000/predict/image", {
+                method: "POST",
+                body: formData,
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert(`Result: ${data.result}\nConfidence: ${(data.confidence * 100).toFixed(2)}%`);
+            } else {
+                alert(`Error: ${data.error}`);
+            }
+        } catch (error) {
+            alert(`Network error: ${error.message}`);
+        }
+    };
+
     return (
         <div className="home-container">
             <header className="hero-section">
@@ -41,11 +89,11 @@ const Home = () => {
             <section className="upload-section">
                 <div className="upload-box">
                     <h3>Upload a Video</h3>
-                    <input type="file" accept="video/*" />
+                    <input type="file" accept="video/*" onChange={handleVideoUpload} />
                 </div>
                 <div className="upload-box">
                     <h3>Upload an Image</h3>
-                    <input type="file" accept="image/*" />
+                    <input type="file" accept="image/*" onChange={handleImageUpload} />
                 </div>
             </section>
 
