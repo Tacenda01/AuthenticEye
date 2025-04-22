@@ -1,0 +1,96 @@
+.home-container {
+    background: linear-gradient(270deg, #0f2c47, #143e63);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    margin-top: 60px;
+}
+
+.hero-section {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.site-title {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+.typewriter-text {
+    font-size: 1.5rem;
+    min-height: 2rem;
+    color: #aad6ff;
+}
+
+.upload-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    width: 100%;
+    max-width: 900px;
+    justify-content: center;
+    margin-bottom: 17rem;
+}
+
+.upload-box {
+    background: #ffffff;
+    color: #222;
+    padding: 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.upload-box:hover {
+    transform: translateY(-5px);
+}
+
+.upload-box h3 {
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    color: #143e63;
+}
+
+.upload-box input[type="file"] {
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 90%;
+    cursor: pointer;
+}
+
+.about-section {
+    max-width: 900px;
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #143e63;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.about-section h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.about-section p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+    .upload-section {
+        flex-direction: row;
+    }
+
+    .upload-box {
+        width: 45%;
+    }
+}
