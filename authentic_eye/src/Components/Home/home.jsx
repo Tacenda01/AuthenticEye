@@ -1,58 +1,72 @@
-import React from "react";
+import React, { useState } from "react";
 import { Typewriter } from "react-simple-typewriter";
 import "./home.css";
 
 const Home = () => {
-    const handleVideoUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
+    const [videoFile, setVideoFile] = useState(null);
+    const [videoResult, setVideoResult] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [loadingText, setLoadingText] = useState("");
 
+    const handleVideoChange = (e) => {
+        setVideoFile(e.target.files[0]);
+        setVideoResult(null);
+    };
+
+
+    const showLoadingMessages = () => {
+        let messages = [
+            "Processing the file...",
+            "Analyzing content...",
+            "Scanning for manipulations...",
+            "Evaluating authenticity...",
+        ];
+        let i = 0;
+        setLoadingText(messages[i]);
+        const interval = setInterval(() => {
+            i = (i + 1) % messages.length;
+            setLoadingText(messages[i]);
+        }, 1500);
+        return interval;
+    };
+
+    const uploadVideo = async () => {
+        if (!videoFile) {
+            alert("Please select an video first.");
+            return;
+        }
         const formData = new FormData();
-        formData.append('file', file);
+        formData.append('file', videoFile);
+        setLoading(true);
+        const interval = showLoadingMessages();
 
         try {
             const response = await fetch("http://localhost:5000/predict/video", {
                 method: "POST",
                 body: formData,
             });
-
             const data = await response.json();
             if (response.ok) {
-                alert(`Result: ${data.result}\nConfidence: ${(data.confidence * 100).toFixed(2)}%`);
+                setVideoResult(`Result: ${data.result} | Confidence: ${(data.confidence * 100).toFixed(2)}%`);
             } else {
-                alert(`Error: ${data.error}`);
+                setVideoResult(`Error: ${data.error}`);
             }
         } catch (error) {
-            alert(`Network error: ${error.message}`);
-        }
-    };
-
-    const handleImageUpload = async (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        const formData = new FormData();
-        formData.append('file', file);
-
-        try {
-            const response = await fetch("http://localhost:5000/predict/image", {
-                method: "POST",
-                body: formData,
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                alert(`Result: ${data.result}\nConfidence: ${(data.confidence * 100).toFixed(2)}%`);
-            } else {
-                alert(`Error: ${data.error}`);
-            }
-        } catch (error) {
-            alert(`Network error: ${error.message}`);
+            setVideoResult(`Network error: ${error.message}`);
+        } finally {
+            clearInterval(interval);
+            setLoading(false);
         }
     };
 
     return (
         <div className="home-container">
+            {loading && (
+                <div className="loading-overlay">
+                    <div className="loading-message">{loadingText}</div>
+                </div>
+            )}
+
             <header className="hero-section">
                 <h1 className="site-title">AuthenticEye</h1>
                 <h2 className="typewriter-text">
@@ -72,6 +86,7 @@ const Home = () => {
                     />
                 </h2>
             </header>
+
             <section className="about-section">
                 <h2>About Us</h2>
                 <p>
@@ -86,18 +101,15 @@ const Home = () => {
                     Join the movement to protect digital truth. Because in an age of misinformation, seeing shouldn’t always mean believing.
                 </p>
             </section>
+
             <section className="upload-section">
                 <div className="upload-box">
                     <h3>Upload a Video</h3>
-                    <input type="file" accept="video/*" onChange={handleVideoUpload} />
-                </div>
-                <div className="upload-box">
-                    <h3>Upload an Image</h3>
-                    <input type="file" accept="image/*" onChange={handleImageUpload} />
+                    <input type="file" accept="video/*" onChange={handleVideoChange} />
+                    <button onClick={uploadVideo}>Check Video</button>
+                    {videoResult && <p className="result-text">{videoResult}</p>}
                 </div>
             </section>
-
-
         </div>
     );
 };
