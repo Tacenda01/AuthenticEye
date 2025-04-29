@@ -7,7 +7,7 @@ const FAQs = () => {
     const faqs = [
         {
             question: "What is this platform about?",
-            answer: "This platform detects deepfake images and videos using advanced AI, helping users verify the authenticity of digital content."
+            answer: "This platform detects deepfake videos using advanced AI, helping users verify the authenticity of digital content."
         },
         {
             question: "Who can use this platform?",
