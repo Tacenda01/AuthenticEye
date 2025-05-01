@@ -16,20 +16,27 @@ os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 video_model = load_model("deepfake_model.h5")
 
 
-def preprocess_video(video_path):
+def preprocess_video(video_path, every_n_frames=10, max_frames=20):
     try:
         cap = cv2.VideoCapture(video_path)
         frames = []
-        success, frame = cap.read()
-        while success and len(frames) < 20:  
-            frame = cv2.resize(frame, (128, 128))
-            frame = frame.astype('float32') / 255.0
-            frames.append(frame)
-            success, frame = cap.read()
+        frame_id = 0
+        count = 0
+        while cap.isOpened() and count < max_frames:
+            ret, frame = cap.read()
+            if not ret:
+                break
+            if frame_id % every_n_frames == 0:
+                frame = cv2.resize(frame, (128, 128))
+                frame = frame.astype('float32') / 255.0
+                frames.append(frame)
+                count += 1
+            frame_id += 1
         cap.release()
         return np.expand_dims(np.array(frames), axis=0)
     except Exception as e:
         raise ValueError(f"Error preprocessing video: {e}")
+
 
 
 @app.route('/predict/video', methods=['POST'])
