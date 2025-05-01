@@ -32,7 +32,7 @@ const Home = () => {
 
     const uploadVideo = async () => {
         if (!videoFile) {
-            alert("Please select an video first.");
+            alert("Please select a video first.");
             return;
         }
         const formData = new FormData();
@@ -47,7 +47,7 @@ const Home = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                setVideoResult(`Result: ${data.result} | Confidence: ${(data.confidence * 100).toFixed(2)}%`);
+                setVideoResult(data.result);
             } else {
                 setVideoResult(`Error: ${data.error}`);
             }
@@ -58,6 +58,7 @@ const Home = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="home-container">
@@ -107,7 +108,16 @@ const Home = () => {
                     <h3>Upload a Video</h3>
                     <input type="file" accept="video/*" onChange={handleVideoChange} />
                     <button onClick={uploadVideo}>Check Video</button>
-                    {videoResult && <p className="result-text">{videoResult}</p>}
+                    {videoResult && (
+                        <div>
+                            <p className="result-text">Result: {videoResult}</p>
+                            {videoResult.toLowerCase().includes("real") && (
+                                <p className="human-verification-note">
+                                    Note: This video appears to be real, but human verification is recommended for complete assurance.
+                                </p>
+                            )}
+                        </div>
+                    )}
                 </div>
             </section>
         </div>

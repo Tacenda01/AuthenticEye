@@ -49,9 +49,11 @@ def predict_video():
         prediction = video_model.predict(video_input)[0][0]
         os.remove(file_path)
 
-        return jsonify({"result": "Deepfake" if prediction > 0.5 else "Fake", "confidence": float(prediction)})
+        result_label = "Deepfake" if prediction > 0.95 else "Real"
+        return jsonify({"result": result_label})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
